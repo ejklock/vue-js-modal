@@ -1,5 +1,5 @@
 {
-  "name": "vue-js-modal",
+  "name": "@klocktecnologia/vue-js-modal",
   "description": "Modal Component for Vue.js",
   "version": "2.0.1",
   "author": "euvl <yev.dev@gmail.com>",
@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/euvl/vue-js-modal.git"
+    "url": "git+https://github.com/euvl/vue-js-modal.git"
   },
   "types": "types/index.d.ts",
   "keywords": [
@@ -78,9 +78,14 @@
     "webpack-merge": "^4.2.2"
   },
   "peerDependencies": {
-    "vue": "^2.6.11"
+    "vue": "^2.6.11 || ^3.0.0"
   },
   "dependencies": {
     "resize-observer-polyfill": "^1.5.1"
-  }
+  },
+  "directories": {
+    "doc": "docs",
+    "example": "examples"
+  },
+  "homepage": "https://github.com/euvl/vue-js-modal#readme"
 }
