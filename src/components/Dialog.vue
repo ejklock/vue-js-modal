@@ -3,12 +3,12 @@
     :is="$modal.context.componentName"
     name="dialog"
     height="auto"
-    :classes="['vue-dialog', this.params.class]"
+    :classes="['vue-dialog', params.class]"
     :width="width"
     :shift-y="0.3"
     :adaptive="true"
     :focus-trap="true"
-    :clickToClose="clickToClose"
+    :click-to-close="clickToClose"
     :transition="transition"
     @before-open="beforeOpened"
     @before-close="beforeClosed"
@@ -16,86 +16,92 @@
     @closed="$emit('closed', $event)"
   >
     <div class="vue-dialog-content">
-      <div class="vue-dialog-content-title" v-if="params.title" v-html="params.title || ''" />
+      <div
+        v-if="params.title"
+        class="vue-dialog-content-title"
+        v-html="params.title || ''"
+      />
 
-      <component v-if="params.component" v-bind="params.props" :is="params.component" />
+      <component
+        v-bind="params.props"
+        :is="params.component"
+        v-if="params.component"
+      />
       <div v-else v-html="params.text || ''" />
     </div>
-    <div class="vue-dialog-buttons" v-if="buttons">
+    <div v-if="buttons" class="vue-dialog-buttons">
       <button
         v-for="(button, index) in buttons"
+        :key="index"
         :class="button.class || 'vue-dialog-button'"
         type="button"
         tabindex="0"
         :style="buttonStyle"
-        :key="index"
-        v-html="button.title"
         @click.stop="click(index, $event)"
-      >{{ button.title }}</button>
+        v-html="button.title"
+      />
     </div>
     <div v-else class="vue-dialog-buttons-none" />
   </component>
 </template>
 <script>
 export default {
-  name: 'VueJsDialog',
-  props: {
-    width: {
-      type: [Number, String],
-      default: 400
+    name: 'VueJsDialog',
+    inject: ['$modal'],
+    props: {
+        width: {
+            type: [Number, String],
+            default: 400,
+        },
+        clickToClose: {
+            type: Boolean,
+            default: true,
+        },
+        transition: {
+            type: String,
+        },
     },
-    clickToClose: {
-      type: Boolean,
-      default: true
+    emits: ['before-opened', 'before-closed', 'opened', 'closed'],
+    data() {
+        return {
+            params: {},
+        };
     },
-    transition: {
-      type: String
-    }
-  },
-  data() {
-    return {
-      params: {}
-    }
-  },
-  computed: {
-    buttons() {
-      return this.params.buttons || []
-    },
-    /**
+    computed: {
+        buttons() {
+            return this.params.buttons || [];
+        },
+        /**
      * Returns FLEX style with correct width for arbitrary number of
      * buttons.
      */
-    buttonStyle() {
-      return {
-        flex: `1 1 ${100 / this.buttons.length}%`
-      }
-    }
-  },
-  methods: {
-    beforeOpened(event) {
-      // window.addEventListener('keyup', this.onKeyUp)
-
-      this.params = event.params || {}
-      this.$emit('before-opened', event)
+        buttonStyle() {
+            return {
+                flex: 1 1 ${100 / this.buttons.length}%,
+            };
+        },
     },
+    methods: {
+        beforeOpened(event) {
+            this.params = event.params || {};
+            this.$emit('before-opened', event);
+        },
 
-    beforeClosed(event) {
-      // window.removeEventListener('keyup', this.onKeyUp)
+        beforeClosed(event) {
+            this.params = {};
+            this.$emit('before-closed', event);
+        },
 
-      this.params = {}
-      this.$emit('before-closed', event)
+        click(buttonIndex, event, source = 'click') {
+            const button = this.buttons[buttonIndex];
+            const handler = button?.handler;
+
+            if (typeof handler === 'function') {
+                handler(buttonIndex, event, { source });
+            }
+        },
     },
-
-    click(buttonIndex, event, source = 'click') {
-      const button = this.buttons[buttonIndex]
-      const handler = button?.handler
-
-      if (typeof handler === 'function') {
-        handler(buttonIndex, event, { source })
-      }
-    }
-  }
-}
+};
 </script>
 <style>
 .vue-dialog {
