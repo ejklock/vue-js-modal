@@ -1,7 +1,7 @@
 {
   "name": "@klocktecnologia/vue-js-modal",
   "description": "Modal Component for Vue.js",
-  "version": "2.0.1.1",
+  "version": "2.0.2",
   "author": "euvl <yev.dev@gmail.com>",
   "main": "dist/index.js",
   "publishConfig": {
