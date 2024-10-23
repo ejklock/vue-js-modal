@@ -1,13 +1,13 @@
 <template>
   <div>
-    <div v-if="this.resizeEdges.includes('t')" class="vue-modal-top"></div>
-    <div v-if="this.resizeEdges.includes('b')" class="vue-modal-bottom"></div>
-    <div v-if="this.resizeEdges.includes('l')" class="vue-modal-left"></div>
-    <div v-if="this.resizeEdges.includes('r')" class="vue-modal-right"></div>
-    <div v-if="this.resizeEdges.includes('tr')" class="vue-modal-topRight"></div>
-    <div v-if="this.resizeEdges.includes('tl')" class="vue-modal-topLeft"></div>
-    <div v-if="this.resizeEdges.includes('br')" :id="getID" :class="className"></div>
-    <div v-if="this.resizeEdges.includes('bl')" class="vue-modal-bottomLeft"></div>
+    <div v-if="resizeEdges.includes('t')" class="vue-modal-top" />
+    <div v-if="resizeEdges.includes('b')" class="vue-modal-bottom" />
+    <div v-if="resizeEdges.includes('l')" class="vue-modal-left" />
+    <div v-if="resizeEdges.includes('r')" class="vue-modal-right" />
+    <div v-if="resizeEdges.includes('tr')" class="vue-modal-topRight" />
+    <div v-if="resizeEdges.includes('tl')" class="vue-modal-topLeft" />
+    <div v-if="resizeEdges.includes('br')" :id="getID" :class="className" />
+    <div v-if="resizeEdges.includes('bl')" class="vue-modal-bottomLeft" />
   </div>
 </template>
 <script>
@@ -49,6 +49,7 @@ export default {
       required: true
     }
   },
+  emits: ['resize', 'resize-stop'],
   data() {
     return {
       clicked: false,
@@ -57,9 +58,6 @@ export default {
       initialX: 0,
       initialY: 0
     }
-  },
-  mounted() {
-    this.$el.addEventListener('mousedown', this.start, false)
   },
   computed: {
     className() {
@@ -70,6 +68,9 @@ export default {
       if (this.resizeIndicator) return 'vue-modal-triangle'
       else return ''
     }
+  },
+  mounted() {
+    this.$el.addEventListener('mousedown', this.start, false)
   },
   methods: {
     start(event) {
